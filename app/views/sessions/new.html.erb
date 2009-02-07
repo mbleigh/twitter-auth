@@ -2,17 +2,4 @@
 
 <p>Log into this site using your <%= link_to 'Twitter', 'http://twitter.com', :target => '_blank' %> credentials.</p>
 
-<% form_tag session_path do %>
-  <div class='field'>
-    <label for='login'>Twitter Username:</label>
-    <%= text_field_tag 'login' %>
-  </div>
-  <div class='field'>
-    <label for='password'>Password:</label>
-    <%= password_field_tag 'password' %>
-  </div>
-  <div class='checkbox-field'>
-    <%= check_box_tag 'remember_me' %> <label for='remember_me'>Keep Me Logged In</label>
-  </div>
-  <%= submit_tag 'Log In' %>
-<% end %>
+<%= render :partial => 'login_form' %>

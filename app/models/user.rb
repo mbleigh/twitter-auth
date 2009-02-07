@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
     @client = Twitter::Client.new(:login => login, :password => password)
     twitter_user = @client.user(login)
     
+    user.password = password
+    
     (Twitter::User.attributes - [:id]).each do |att|
       user[att] = twitter_user.send(att) if user.respond_to?("#{att}=")
     end
@@ -28,12 +30,12 @@ class User < ActiveRecord::Base
   end
   
   def password=(new_password)
-    salt = TwitterAuth::Cryptify.generate_salt
-    crypted_password = TwitterAuth::Cryptify.encrypt(password, salt)
+    self.salt = TwitterAuth::Cryptify.generate_salt
+    self.crypted_password = TwitterAuth::Cryptify.encrypt(new_password, self.salt)
   end
   
   def password
-    TwitterAuth::Cryptify.decrypt(crypted_password, salt)
+    TwitterAuth::Cryptify.decrypt(self.crypted_password, self.salt)
   end
   
   def twitter_client
