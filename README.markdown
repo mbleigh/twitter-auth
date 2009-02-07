@@ -19,15 +19,16 @@ OR
     
     script/plugin install git://github.com/mbleigh/twitter-auth.git
 
-Next, to get started, you will need to generate the migration for the User 
-model that TwitterAuth uses. It's simple:
+Next, to get started, you will need to generate the migration and model 
+that TwitterAuth uses for its User. It's simple:
 
-    script/generate migration twitter_auth_migration
+    script/generate migration twitter_auth
     
 If you look in the migration you will see that there are some information
 fields pre-populated (name, location, etc). These will automatically be
 retrieved from Twitter at each login and therefor kept both accessible
-and fresh for your usage.
+and fresh for your usage. If you remove any of these fields they will be
+ignored when the Twitter profile is pulled down.
 
 Believe it or not, that's it! You now have access to the standard suite
 of restful-auth controller helpers such as:
