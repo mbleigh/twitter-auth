@@ -1,4 +1,5 @@
 require 'twitter_auth'
 
-config.gem 'twitter4r', :lib => 'twitter'
+config.gem 'twitter'
 config.gem 'ezcrypto'
+config.gem 'json'

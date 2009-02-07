@@ -13,6 +13,16 @@ class TwitterAuthMigration < ActiveRecord::Migration
       t.string  :profile_image_url
       t.string  :url
       t.boolean :protected
+      t.string  :profile_background_color
+      t.string  :profile_sidebar_fill_color
+      t.string  :profile_link_color
+      t.string  :profile_sidebar_border_color
+      t.string  :profile_text_color      
+      t.integer :friends_count
+      t.integer :statuses_count
+      t.integer :followers_count      
+      t.integer :favourites_count      
+      t.integer :utc_offset
       
       t.timestamps
     end

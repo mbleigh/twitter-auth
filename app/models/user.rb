@@ -1,24 +1,28 @@
 require 'openssl'
 
 class User < ActiveRecord::Base
+  TWITTER_ATTRIBUTES = [:name, :location, :description, :profile_image_url, :url, :protected, :profile_background_color, :profile_sidebar_fill_color, :profile_text_color, :friends_count, :statuses_count, :followers_count, :favourites_count, :utc_offset]
+  
   def self.authenticate(login, password)
-    if verified = Twitter::Client.new.authenticate?(login, password)
-      user = User[login] || User.new(:login => login)
-      rebuild!(user, login, password)
-    end
+    Twitter::Base.new(login, password).verify_credentials
     
-    return verified ? user.reload : nil
+    user = User[login] || User.new(:login => login)
+    rebuild!(user, login, password)
+    
+    return user.reload
+  rescue Twitter::CantConnect
+    return nil
   end
   
   # Regathers the Twitter user attributes so that
   # they are never out of date.
   def self.rebuild!(user, login, password)
-    @client = Twitter::Client.new(:login => login, :password => password)
+    @client = Twitter::Base.new(login, password)
     twitter_user = @client.user(login)
     
     user.password = password
     
-    (Twitter::User.attributes - [:id]).each do |att|
+    TWITTER_ATTRIBUTES.each do |att|
       user[att] = twitter_user.send(att) if user.respond_to?("#{att}=")
     end
     
@@ -39,7 +43,7 @@ class User < ActiveRecord::Base
   end
   
   def twitter_client
-    @client ||= Twitter::Client.new(:login => self.id, :password => self.password)
+    @client ||= Twitter::Base.new(self.login, self.password)
   end
   
   def rebuild!
