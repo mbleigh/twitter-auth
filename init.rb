@@ -1,2 +1,1 @@
-# Gem Dependencies
-config.gem 'oauth'
+require File.dirname(__FILE__) + '/rails/init'
