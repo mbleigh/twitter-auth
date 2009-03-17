@@ -38,12 +38,12 @@ describe SessionsController do
     describe '#oauth_callback' do
       describe 'with no session info' do
         it 'should set the flash[:error]' do
-          get :oauth_callback
+          get :oauth_callback, :oauth_token => 'faketoken'
           flash[:error].should == 'No authentication information was found in the session. Please try again.'
         end
 
         it 'should redirect to "/"' do
-          get :oauth_callback
+          get :oauth_callback, :oauth_token => 'faketoken'
           response.should redirect_to('/')
         end
       end
@@ -56,8 +56,13 @@ describe SessionsController do
           get :oauth_callback, :oauth_token => 'faketoken'
         end
 
-        describe 'building the access token' do
+        it 'should verify that the token matches the session' do
+          get :oauth_callback, :oauth_token => 'notthetoken'
+          flash[:error].should == 'Authentication information does not match session information. Please try again.'
+        end
 
+
+        describe 'building the access token' do
           it 'should rebuild the request token' do
             correct_token =  OAuth::RequestToken.new(TwitterAuth.consumer,'faketoken','faketokensecret')
             

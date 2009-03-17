@@ -25,4 +25,15 @@ To utilize TwitterAuth in your application you will need to run the generator:
 
 This will generate a migration as well as set up the stubs needed to use the Rails Engines controllers and models set up by TwitterAuth. It will also create a User class that inherits from TwitterUser, abstracting away all of the Twitter authentication functionality and leaving you a blank slate to work with for your application.
 
+Customizing TwitterAuth
+-----------------------
+
+There are a number of hooks to extend the functionality of TwitterAuth. Here is a brief description of each of them.
+
+### Controller Methods
+
+TwitterAuth provides some default controller methods that may be overridden in your +ApplicationController+ to behave differently.
+
+* **authorization_failed:** called when Twitter authorization has failed during the process. By default, simply redirects to the site root.
+
 Copyright (c) 2009 (Michael Bleigh)[http://www.mbleigh.com] and (Intridea, Inc.)[http://www.intridea.com/], released under the MIT License

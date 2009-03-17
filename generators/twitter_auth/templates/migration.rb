@@ -28,8 +28,12 @@ class TwitterAuth < ActiveRecord::Migration
       t.integer :statuses_count
       t.integer :followers_count
       t.integer :favourites_count
+
+      # Probably don't need both, but they're here.
       t.integer :utc_offset
-      t.string :time_zone # 'Magic field' Rails-compatible time zone pulled from UTC Offset
+      t.string :time_zone
+
+      t.timestamps
     end
   end
 
