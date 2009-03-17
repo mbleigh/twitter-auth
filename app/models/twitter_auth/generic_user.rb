@@ -16,6 +16,7 @@ module TwitterAuth
       :statuses_count,
       :followers_count,      
       :favourites_count,
+      :time_zone,
       :utc_offset
     ]
     

@@ -29,8 +29,9 @@ ActiveRecord::Schema.define :version => 0 do
     t.integer :followers_count
     t.integer :favourites_count
     t.integer :utc_offset
-    t.string :time_zone # 'Magic field' Rails-compatible time zone pulled from UTC Offset
-  end
+    t.string :time_zone
 
+    t.timestamps
+  end
 end
 
