@@ -42,9 +42,14 @@ describe SessionsController do
           flash[:error].should == 'No authentication information was found in the session. Please try again.'
         end
 
-        it 'should redirect to "/"' do
+        it 'should redirect to "/" by default' do
           get :oauth_callback, :oauth_token => 'faketoken'
           response.should redirect_to('/')
+        end
+
+        it 'should call authentication_failed' do
+          controller.should_receive(:authentication_failed).any_number_of_times
+          get :oauth_callback, :oauth_token => 'faketoken'
         end
       end
 

@@ -32,8 +32,12 @@ There are a number of hooks to extend the functionality of TwitterAuth. Here is 
 
 ### Controller Methods
 
-TwitterAuth provides some default controller methods that may be overridden in your +ApplicationController+ to behave differently.
+TwitterAuth provides some default controller methods that may be overridden in your `ApplicationController` to behave differently.
 
-* **authorization_failed:** called when Twitter authorization has failed during the process. By default, simply redirects to the site root.
+* `authorization_failed(message)`: called when Twitter authorization has failed during the process. By default, simply redirects to the site root.
+* `authorization_succeeded`: called when Twitter authorization has completed successfully. By default, simply redirects to the site root.
 
-Copyright (c) 2009 (Michael Bleigh)[http://www.mbleigh.com] and (Intridea, Inc.)[http://www.intridea.com/], released under the MIT License
+
+
+
+Copyright (c) 2009 [Michael Bleigh](http://www.mbleigh.com) and [Intridea, Inc.](http://www.intridea.com/), released under the MIT License

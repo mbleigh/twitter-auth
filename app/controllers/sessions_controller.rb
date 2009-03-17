@@ -9,14 +9,12 @@ class SessionsController < ApplicationController
   end
 
   def oauth_callback
-    unless session[:request_token] && session[:request_token_secret]
-      flash[:error] = 'No authentication information was found in the session. Please try again.'
-      authentication_failed and return
+    unless session[:request_token] && session[:request_token_secret] 
+      authentication_failed('No authentication information was found in the session. Please try again.') and return
     end
 
    unless params[:oauth_token].blank? || session[:request_token] ==  params[:oauth_token]
-     flash[:error] = 'Authentication information does not match session information. Please try again.'
-     authentication_failed and return
+     authentication_failed('Authentication information does not match session information. Please try again.') and return
    end
 
     @request_token = OAuth::RequestToken.new(TwitterAuth.consumer, session[:request_token], session[:request_token_secret])
@@ -27,6 +25,6 @@ class SessionsController < ApplicationController
 
     session[:user_id] = @user.id
 
-    render :nothing => true 
+    authentication_succeeded 
   end
 end
