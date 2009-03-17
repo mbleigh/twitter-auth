@@ -12,12 +12,16 @@ class SessionsController < ApplicationController
     unless session[:request_token] && session[:request_token_secret]
       flash[:error] = 'No authentication information was found in the session. Please try again.'
       redirect_to '/' and return
-    end   
+    end 
 
     @request_token = OAuth::RequestToken.new(TwitterAuth.consumer, session[:request_token], session[:request_token_secret])
 
     @access_token = @request_token.get_access_token
 
-   render :text => @request_token.inspect 
+    @user = User.identify_or_create_from_access_token(@access_token)
+
+    session[:user_id] = @user.id
+
+    render :nothing => true 
   end
 end

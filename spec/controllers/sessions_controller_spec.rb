@@ -50,23 +50,37 @@ describe SessionsController do
 
       describe 'with proper info' do
         before do
-          session.should_receive(:[]).any_number_of_times.with(:request_token).and_return('faketoken')
-          session.should_receive(:[]).any_number_of_times.with(:request_token_secret).and_return('faketokensecret')
+          @user = Factory.create(:twitter_oauth_user)
+          request.session[:request_token] = 'faketoken'
+          request.session[:request_token_secret] = 'faketokensecret'
           get :oauth_callback, :oauth_token => 'faketoken'
         end
 
-        it 'should rebuild the request token' do
-          correct_token =  OAuth::RequestToken.new(TwitterAuth.consumer,'faketoken','faketokensecret')
-          
-          %w(token secret).each do |att|
-            assigns[:request_token].send(att).should == correct_token.send(att)
+        describe 'building the access token' do
+
+          it 'should rebuild the request token' do
+            correct_token =  OAuth::RequestToken.new(TwitterAuth.consumer,'faketoken','faketokensecret')
+            
+            %w(token secret).each do |att|
+              assigns[:request_token].send(att).should == correct_token.send(att)
+            end
+          end
+
+          it 'should exchange the request token for an access token' do
+            assigns[:access_token].should be_a(OAuth::AccessToken)
+            assigns[:access_token].token.should == 'fakeaccesstoken'
+            assigns[:access_token].secret.should == 'fakeaccesstokensecret'
           end
         end
+        
+        describe 'identifying the user' do
+          it "should find the user" do         
+            assigns[:user].should == @user
+          end
 
-        it 'should exchange the request token for an access token' do
-          assigns[:access_token].should be_a(OAuth::AccessToken)
-          assigns[:access_token].token.should == 'fakeaccesstoken'
-          assigns[:access_token].secret.should == 'fakeaccesstokensecret'
+          it "should assign the user id to the session" do
+            session[:user_id].should == @user.id
+          end
         end
       end
     end
