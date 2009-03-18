@@ -1,5 +1,7 @@
 module TwitterAuth
   class OauthUser < TwitterAuth::GenericUser 
+    attr_protected :access_token, :access_secret
+
     def self.identify_or_create_from_access_token(token, secret=nil)
       raise ArgumentError, 'Must authenticate with an OAuth::AccessToken or the string access token and secret.' unless (token && secret) || token.is_a?(OAuth::AccessToken)
 

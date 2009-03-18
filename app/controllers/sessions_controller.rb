@@ -20,11 +20,23 @@ class SessionsController < ApplicationController
     @request_token = OAuth::RequestToken.new(TwitterAuth.consumer, session[:request_token], session[:request_token_secret])
 
     @access_token = @request_token.get_access_token
+    
+    # The request token has been invalidated
+    # so we nullify it in the session.
+    session[:request_token] = nil
+    session[:request_token_secret] = nil
 
     @user = User.identify_or_create_from_access_token(@access_token)
 
     session[:user_id] = @user.id
 
     authentication_succeeded 
+  rescue Net::HTTPServerException => e
+    case e.message
+      when '401 "Unauthorized"'
+        authentication_failed('This authentication request is no longer valid. Please try again.') and return
+      else
+        authentication_failed('There was a problem trying to authenticate you. Please try again.') and return
+    end 
   end
 end

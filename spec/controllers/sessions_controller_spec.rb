@@ -6,6 +6,10 @@ describe SessionsController do
       params_from(:get, '/session/new').should == {:controller => 'sessions', :action => 'new'}
     end
 
+    it 'should route /login to SessionsController#new' do
+      params_from(:get, '/login').should == {:controller => 'sessions', :action => 'new'}
+    end
+
     it 'should route /oauth_callback to SessionsController#oauth_callback' do
       params_from(:get, '/oauth_callback').should == {:controller => 'sessions', :action => 'oauth_callback'}
     end
@@ -59,13 +63,7 @@ describe SessionsController do
           request.session[:request_token] = 'faketoken'
           request.session[:request_token_secret] = 'faketokensecret'
           get :oauth_callback, :oauth_token => 'faketoken'
-        end
-
-        it 'should verify that the token matches the session' do
-          get :oauth_callback, :oauth_token => 'notthetoken'
-          flash[:error].should == 'Authentication information does not match session information. Please try again.'
-        end
-
+        end 
 
         describe 'building the access token' do
           it 'should rebuild the request token' do
@@ -81,6 +79,11 @@ describe SessionsController do
             assigns[:access_token].token.should == 'fakeaccesstoken'
             assigns[:access_token].secret.should == 'fakeaccesstokensecret'
           end
+
+          it 'should wipe the request token after exchange' do
+            session[:request_token].should be_nil
+            session[:request_token_secret].should be_nil
+          end
         end
         
         describe 'identifying the user' do
@@ -90,6 +93,29 @@ describe SessionsController do
 
           it "should assign the user id to the session" do
             session[:user_id].should == @user.id
+          end
+        end
+
+        describe "when OAuth doesn't work" do
+          before do
+            request.session[:request_token] = 'faketoken'
+            request.session[:request_token_secret] = 'faketokensecret'
+            @request_token =  OAuth::RequestToken.new(TwitterAuth.consumer, session[:request_token], session[:request_token_secret])
+            OAuth::RequestToken.stub!(:new).and_return(@request_token)
+          end
+
+          it 'should call authentication_failed when it gets a 401 from OAuth' do
+            @request_token.stub!(:get_access_token).and_raise(Net::HTTPServerException.new('401 "Unauthorized"', '401 "Unauthorized"'))
+            controller.should_receive(:authentication_failed).with('This authentication request is no longer valid. Please try again.')
+            # the should raise_error is hacky because of the expectation
+            # stubbing the proper behavior :-(
+            lambda{get :oauth_callback, :oauth_token => 'faketoken'}.should raise_error(ActionView::MissingTemplate)
+          end
+
+          it 'should call authentication_failed when it gets a different HTTPServerException' do
+            @request_token.stub!(:get_access_token).and_raise(Net::HTTPServerException.new('404 "Not Found"', '404 "Not Found"'))
+            controller.should_receive(:authentication_failed).with('There was a problem trying to authenticate you. Please try again.')
+            lambda{get :oauth_callback, :oauth_token => 'faketoken'}.should raise_error(ActionView::MissingTemplate)
           end
         end
       end

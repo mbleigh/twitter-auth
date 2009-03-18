@@ -1,0 +1,12 @@
+TwitterAuth Generator
+=====================
+
+The TwitterAuth generator allows you to generate the components necessary to implement Twitter as a Single Sign-On provider for your site.
+
+To run it, you simply need to call it:
+
+script/generate twitter_auth
+
+This will generate the migration necessary for the users table as well as generate a User model that extends the appropriate TwitterAuth model template and a config/twitter.yml that allows you to set your OAuth consumer key and secret. 
+
+By default, TwitterAuth uses OAuth as its authentication strategy. If you wish to use HTTP Basic you can pass in the --basic option.
