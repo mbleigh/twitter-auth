@@ -10,6 +10,14 @@ describe SessionsController do
       params_from(:get, '/login').should == {:controller => 'sessions', :action => 'new'}
     end
 
+    it 'should route /logout to SessionsController#destroy' do
+      params_from(:get, '/logout').should == {:controller => 'sessions', :action => 'destroy'}
+    end
+
+    it 'should route DELETE /session to SessionsController#destroy' do
+      params_from(:delete, '/session').should == {:controller => 'sessions', :action => 'destroy'}
+    end
+
     it 'should route /oauth_callback to SessionsController#oauth_callback' do
       params_from(:get, '/oauth_callback').should == {:controller => 'sessions', :action => 'oauth_callback'}
     end
@@ -127,6 +135,18 @@ describe SessionsController do
           end
         end
       end
+    end
+  end
+
+  describe '#destroy' do
+    it 'should call logout_keeping_session!' do
+      controller.should_receive(:logout_keeping_session!).once
+      get :destroy
+    end
+
+    it 'should redirect to the root' do
+      get :destroy
+      response.should redirect_to('/')
     end
   end
 end

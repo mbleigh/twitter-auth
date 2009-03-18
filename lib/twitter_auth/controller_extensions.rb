@@ -48,6 +48,11 @@ module TwitterAuth
     def logged_in?
       !!current_user
     end
+
+    def logout_keeping_session!
+      @current_user = nil
+      session[:user_id] = nil
+    end
   end
 end
 
