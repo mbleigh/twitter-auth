@@ -30,10 +30,15 @@ class TwitterAuthTestController < ApplicationController
   def redirect_back_action
     redirect_back_or_default(params[:to] || '/')
   end
+
+  def logout_keeping_session_action
+    logout_keeping_session!
+    redirect_back_or_default('/')
+  end
 end
 
 describe TwitterAuthTestController do
-  %w(authentication_failed authentication_succeeded current_user authorized? login_required access_denied store_location redirect_back_or_default).each do |m|
+  %w(authentication_failed authentication_succeeded current_user authorized? login_required access_denied store_location redirect_back_or_default logout_keeping_session!).each do |m|
     it "should respond to the extension method '#{m}'" do
       controller.should respond_to(m)
     end
@@ -118,6 +123,24 @@ describe TwitterAuthTestController do
     it 'should redirect to the default provided otherwise' do
       get :redirect_back_action, :to => '/someurl'
       should redirect_to('/someurl')
+    end
+  end
+
+  describe 'logout_keeping_session!' do
+    before do
+      @user = Factory.create(:twitter_oauth_user)
+      request.session[:user_id] = @user.id
+    end
+
+    it 'should unset session[:user_id]' do
+      get :logout_keeping_session_action
+      request.session[:user_id].should be_nil
+    end
+
+    it 'should unset current_user' do
+      controller.send(:current_user).should == @user
+      get :logout_keeping_session_action
+      controller.send(:current_user).should be_nil
     end
   end
 end

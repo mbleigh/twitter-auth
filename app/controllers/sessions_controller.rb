@@ -42,4 +42,9 @@ class SessionsController < ApplicationController
         authentication_failed('There was a problem trying to authenticate you. Please try again.') and return
     end 
   end
+  
+  def destroy
+    logout_keeping_session!
+    redirect_back_or_default('/')
+  end
 end
