@@ -2,6 +2,7 @@ development:
   strategy: oauth
   oauth_consumer_key: devkey
   oauth_consumer_secret: devsecret
+  oauth_callback: "http://localhost:3000"
 test:
   strategy: oauth
   oauth_consumer_key: testkey

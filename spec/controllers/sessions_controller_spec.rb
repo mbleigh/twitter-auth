@@ -37,6 +37,14 @@ describe SessionsController do
         get :new
         response.should redirect_to('https://twitter.com/oauth/authorize?oauth_token=faketoken')
       end
+
+      it 'should redirect to the oauth_callback if one is specified' do
+        TwitterAuth.stub!(:oauth_callback).and_return('http://localhost:3000/development')
+        TwitterAuth.stub!(:oauth_callback?).and_return(true)        
+
+        get :new
+        response.should redirect_to('https://twitter.com/oauth/authorize?oauth_token=faketoken&oauth_callback=' + CGI.escape(TwitterAuth.oauth_callback))
+      end
     end
 
     describe '#oauth_callback' do
