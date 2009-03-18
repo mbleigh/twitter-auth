@@ -3,7 +3,7 @@ module TwitterAuth
   self.base_url = 'https://twitter.com'
   
   def self.config(environment=RAILS_ENV)
-    YAML.load(File.open(RAILS_ROOT + '/config/twitter.yml').read)[environment]
+    YAML.load(File.open(RAILS_ROOT + '/config/twitter_auth.yml').read)[environment]
   end
 
   # The authentication strategy employed by this

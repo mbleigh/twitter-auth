@@ -1,11 +1,11 @@
-class TwitterAuth < ActiveRecord::Migration
+class TwitterAuthMigration < ActiveRecord::Migration
   def self.up
     create_table :users do |t|
       t.string :login
-    <% if options[:strategy] == 'basic' %>
+    <% if options[:oauth] %>
       t.string :access_token
       t.string :access_secret
-    <% else %>
+    <% elsif options[:basic] %>
       t.string :crypted_password
       t.string :salt
     <% end %>

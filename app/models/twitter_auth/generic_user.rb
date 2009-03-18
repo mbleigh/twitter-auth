@@ -1,5 +1,7 @@
 module TwitterAuth
   class GenericUser < ActiveRecord::Base
+    attr_protected :login
+
     TWITTER_ATTRIBUTES = [
       :name,
       :location,
@@ -30,7 +32,8 @@ module TwitterAuth
     def self.new_from_twitter_hash(hash)
       raise ArgumentError, 'Invalid hash: must include screen_name.' unless hash.key?('screen_name')
 
-      user = User.new(:login => hash.delete('screen_name'))
+      user = User.new
+      user.login = hash['screen_name']
 
       TWITTER_ATTRIBUTES.each do |att|
         user.send("#{att}=", hash[att.to_s]) if user.respond_to?("#{att}=")

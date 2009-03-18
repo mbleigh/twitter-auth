@@ -1,0 +1,23 @@
+<% if options[:oauth] -%>
+development:
+  strategy: oauth
+  oauth_consumer_key: devkey
+  oauth_consumer_secret: devsecret
+  oauth_callback: "http://localhost:3000/oauth_callback"
+test:
+  strategy: oauth
+  oauth_consumer_key: testkey
+  oauth_consumer_secret: testsecret
+  oauth_callback: "http://localhost:3000/oauth_callback"
+production:
+  strategy: oauth
+  oauth_consumer_key: prodkey
+  oauth_consumer_secret: prodsecret
+<% else -%>
+development:
+  strategy: basic
+test:
+  strategy: basic
+production:
+  strategy: basic
+<% end %>
