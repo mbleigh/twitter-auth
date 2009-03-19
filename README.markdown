@@ -16,21 +16,27 @@ Or you can install it as a traditional Rails plugin:
 
 Note that because TwitterAuth utilizes Rails Engines functionality introduced in Rails 2.3, it will not work with earlier versions of Rails.
 
+**NOTE:** TwitterAuth requires Rails version 2.3 or later because it makes extensive use of the new support for Rails Engines. Previous versions of Rails are not supported.
+
 Usage
 =====
 
-*NOTE:* HTTP Basic strategy is not yet supported. Please only use OAuth until this message is removed.
+**NOTE:** HTTP Basic strategy is not yet supported. Please only use OAuth until this message is removed.
 
 To utilize TwitterAuth in your application you will need to run the generator:
 
-    script/generate twitter_auth --strategy [oauth|basic]
+    script/generate twitter_auth [--oauth(default)|--basic]
 
-This will generate a migration as well as set up the stubs needed to use the Rails Engines controllers and models set up by TwitterAuth. It will also create a User class that inherits from TwitterUser, abstracting away all of the Twitter authentication functionality and leaving you a blank slate to work with for your application.
+This will generate a migration as well as set up the stubs needed to use the Rails Engines controllers and models set up by TwitterAuth. It will also create a User class that inherits from TwitterUser, abstracting away all of the Twitter authentication functionality and leaving you a blank slate to work with for your application. 
+
+Finally, it will create a configuration file in `config/twitter_auth.yml` in which you should input your OAuth consumer key and secret (if using the OAuth strategy) as well as a custom callback for development (the `oauth_callback` option is where Twitter will send the browser after authentication is complete. If you leave it blank Twitter will send it to the URL set up when you registered your application).
 
 Usage Basics
 ------------
 
-*TwitterAuth* borrows heavily from [Restful Authentication](http://github.com/technoweenie/restful-authentication) for its API because it's simple and well-known. Here are some of the familiar methods that are available:
+If you need more information about how to use OAuth with Twitter, please visit Twitter's [OAuth FAQ](http://apiwiki.twitter.com/OAuth-FAQ).
+
+TwitterAuth borrows heavily from [Restful Authentication](http://github.com/technoweenie/restful-authentication) for its API because it's simple and well-known. Here are some of the familiar methods that are available:
 
 * `login_required`: a before filter that can be added to a controller to require that a user logs in before he/she can view the page.
 * `current_user`: returns the logged in user if one exists, otherwise returns `nil`.
@@ -38,6 +44,11 @@ Usage Basics
 * `redirect_back_or_default(url)`: redirects to the location where `store_location` was last called or the specified default URL.
 * `store_location`: store the current URL for returning to when a `redirect_back_or_default` is called.
 * `authorized?`: override this to add fine-grained access control for when `login_required` is already called.
+
+Tips and Tricks
+---------------
+
+The `oauth_callback` set up in `twitter_auth.yml`
 
 Customizing TwitterAuth
 -----------------------

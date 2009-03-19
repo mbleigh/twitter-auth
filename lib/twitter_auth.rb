@@ -1,10 +1,15 @@
 module TwitterAuth
   mattr_accessor :base_url
   self.base_url = 'https://twitter.com'
-  
+
   def self.config(environment=RAILS_ENV)
     @config ||= {}
     @config[environment] ||= YAML.load(File.open(RAILS_ROOT + '/config/twitter_auth.yml').read)[environment]
+  end
+
+  def self.encryption_key
+    raise TwitterAuth::Cryptify::Error, 'You must specify an encryption_key in config/twitter_auth.yml' if config['encryption_key'].blank?
+    config['encryption_key'] 
   end
 
   def self.oauth_callback?

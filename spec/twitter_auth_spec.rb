@@ -68,4 +68,16 @@ describe TwitterAuth do
     TwitterAuth.oauth?.should be_false
     TwitterAuth.basic?.should be_true
   end
+
+  describe '#encryption_key' do
+    it 'should raise a Cryptify error if none is found' do
+      TwitterAuth.stub!(:config).and_return({})
+      lambda{TwitterAuth.encryption_key}.should raise_error(TwitterAuth::Cryptify::Error, "You must specify an encryption_key in config/twitter_auth.yml")
+    end
+
+    it 'should return the config[encryption_key] value' do
+      TwitterAuth.stub!(:config).and_return({'encryption_key' => 'mickeymouse'})
+      TwitterAuth.encryption_key.should == 'mickeymouse'
+    end
+  end
 end

@@ -8,6 +8,8 @@ class SessionsController < ApplicationController
       url = @request_token.authorize_url
       url << "&oauth_callback=#{CGI.escape(TwitterAuth.oauth_callback)}" if TwitterAuth.oauth_callback?      
       redirect_to url
+    else
+      
     end
   end
 
