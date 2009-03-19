@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe TwitterAuth do
   describe '#base_url' do
     it 'should have default to https://twitter.com' do
+      TwitterAuth.stub!(:config).and_return({})
       TwitterAuth.base_url.should == 'https://twitter.com'
     end
 
@@ -51,6 +52,7 @@ describe TwitterAuth do
 
   describe '#strategy' do
     it 'should pull and symbolize from the config' do
+      TwitterAuth.stub!(:config).and_return({'strategy' => 'oauth'})
       TwitterAuth.strategy.should == TwitterAuth.config['strategy'].to_sym
     end
     

@@ -7,7 +7,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :access_secret
 
     # Basic fields
-    t.string :crypted_password
+    t.binary :crypted_password
     t.string :salt
 
     # This information is automatically kept
