@@ -52,4 +52,19 @@ describe TwitterAuth::OauthUser do
       user.access_secret.should == @token.secret
     end
   end
+
+  describe '#token' do
+    before do
+      @user = Factory.create(:twitter_oauth_user, :access_token => 'token', :access_secret => 'secret')
+    end
+
+    it 'should return an AccessToken' do
+      @user.token.should be_a(OAuth::AccessToken)
+    end
+
+    it "should use the user's access_token and secret" do
+      @user.token.token.should == @user.access_token
+      @user.token.secret.should == @user.access_secret
+    end
+  end
 end
