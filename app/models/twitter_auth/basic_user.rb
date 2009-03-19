@@ -14,7 +14,8 @@ module TwitterAuth
       def verify_credentials(login, password)
         uri = URI.parse(TwitterAuth.base_url)
         net = Net::HTTP.new(uri.host, uri.port)
-        net.use_ssl = TwitterAuth.base_url.match(/\Ahttps/)
+        net.use_ssl = uri.scheme == 'https'
+        net.read_timeout = TwitterAuth.api_timeout
         response = net.start { |http|
           request = Net::HTTP::Get.new('/account/verify_credentials.json')
           request.basic_auth login, password

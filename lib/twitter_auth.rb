@@ -8,6 +8,10 @@ module TwitterAuth
     config['base_url'] || 'https://twitter.com'    
   end
 
+  def self.api_timeout
+    config['api_timeout'] || 10
+  end
+
   def self.encryption_key
     raise TwitterAuth::Cryptify::Error, 'You must specify an encryption_key in config/twitter_auth.yml' if config['encryption_key'].blank?
     config['encryption_key'] 

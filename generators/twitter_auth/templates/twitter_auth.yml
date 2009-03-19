@@ -2,31 +2,37 @@
 development:
   strategy: oauth
   base_url: "https://twitter.com"
+  api_timeout: 10
   oauth_consumer_key: devkey
   oauth_consumer_secret: devsecret
   oauth_callback: "http://localhost:3000/oauth_callback"
 test:
   strategy: oauth
   base_url: "https://twitter.com"
+  api_timeout: 10
   oauth_consumer_key: testkey
   oauth_consumer_secret: testsecret
   oauth_callback: "http://localhost:3000/oauth_callback"
 production:
   strategy: oauth
+  api_timeout: 10
   base_url: "https://twitter.com"
   oauth_consumer_key: prodkey
   oauth_consumer_secret: prodsecret
 <% else -%>
 development:
   strategy: basic
+  api_timeout: 10
   base_url: "https://twitter.com"
   # randomly generated key for encrypting Twitter passwords
   encryption_key: "<%= key = ActiveSupport::SecureRandom.hex(12) %>"
 test:
   strategy: basic
+  api_timeout: 10
   base_url: "https://twitter.com"
   encryption_key: "<%= key %>"
 production:
   strategy: basic
+  api_timeout: 10
   encryption_key: "<%= key %>"
 <% end %>
