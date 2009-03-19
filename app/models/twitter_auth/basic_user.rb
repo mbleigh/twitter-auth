@@ -11,14 +11,6 @@ module TwitterAuth
     end
 
     module ClassMethods
-      def authenticate(login, password)
-        Twitter::Base.new(login, password).verify_credentials
-        
-        user = find_by_login(login)
-      rescue Twitter::CantConnect
-        nil
-      end
-
       def verify_credentials(login, password)
         uri = URI.parse(TwitterAuth.base_url)
         net = Net::HTTP.new(uri.host, uri.port)
@@ -28,6 +20,7 @@ module TwitterAuth
           request.basic_auth login, password
           http.request(request)
         }
+
         if response.code == '200'
           JSON.parse(response.body)
         else
@@ -35,7 +28,7 @@ module TwitterAuth
         end
       end
 
-      def authorize(login, password)
+      def authenticate(login, password)
         if twitter_hash = verify_credentials(login, password)
           user = identify_or_create_from_twitter_hash_and_password(twitter_hash, password)
           user
