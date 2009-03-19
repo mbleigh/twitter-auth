@@ -9,18 +9,23 @@ module TwitterAuth
 
     protected
 
-    def authentication_failed(message)
+    def authentication_failed(message, destination='/')
       flash[:error] = message
-      redirect_to '/'
+      redirect_to destination
     end
 
-    def authentication_succeeded(message = 'You have logged in successfully.')
+    def authentication_succeeded(message = 'You have logged in successfully.', destination = '/')
       flash[:notice] = message
-      redirect_to '/'
+      redirect_to destination
     end
 
     def current_user
       @current_user ||= User.find_by_id(session[:user_id])
+    end
+
+    def current_user=(new_user)
+      session[:user_id] = new_user.id
+      @current_user = new_user
     end
 
     def authorized?
