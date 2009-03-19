@@ -21,8 +21,6 @@ Note that because TwitterAuth utilizes Rails Engines functionality introduced in
 Usage
 =====
 
-**NOTE:** HTTP Basic strategy is not yet supported. Please only use OAuth until this message is removed.
-
 To utilize TwitterAuth in your application you will need to run the generator:
 
     script/generate twitter_auth [--oauth(default)|--basic]
@@ -44,11 +42,6 @@ TwitterAuth borrows heavily from [Restful Authentication](http://github.com/tech
 * `redirect_back_or_default(url)`: redirects to the location where `store_location` was last called or the specified default URL.
 * `store_location`: store the current URL for returning to when a `redirect_back_or_default` is called.
 * `authorized?`: override this to add fine-grained access control for when `login_required` is already called.
-
-Tips and Tricks
----------------
-
-The `oauth_callback` set up in `twitter_auth.yml`
 
 Customizing TwitterAuth
 -----------------------
