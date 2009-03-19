@@ -2,13 +2,13 @@ class TwitterAuthMigration < ActiveRecord::Migration
   def self.up
     create_table :users do |t|
       t.string :login
-    <% if options[:oauth] %>
+<% if options[:oauth] -%>
       t.string :access_token
       t.string :access_secret
-    <% elsif options[:basic] %>
-      t.string :crypted_password
+<% elsif options[:basic] -%>
+      t.binary :crypted_password
       t.string :salt
-    <% end %>
+<% end -%>
 
       # This information is automatically kept
       # in-sync at each login of the user. You

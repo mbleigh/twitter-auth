@@ -16,8 +16,12 @@ production:
 <% else -%>
 development:
   strategy: basic
+  # randomly generated key for encrypting Twitter passwords
+  encryption_key: "<%= key = ActiveSupport::SecureRandom.hex(12) %>"
 test:
   strategy: basic
+  encryption_key: "<%= key %>"
 production:
   strategy: basic
+  encryption_key: "<%= key %>"
 <% end %>

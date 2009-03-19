@@ -11,6 +11,7 @@ class TwitterAuth::GenericUser
   def self.table_name; 'twitter_auth_users' end
 end
 
+Object.send(:remove_const, :User)
 class User < TwitterAuth::OauthUser
 
 end
@@ -39,5 +40,12 @@ def stub_oauth!
     'strategy' => 'oauth',
     'oauth_consumer_key' => 'testkey',
     'oauth_consumer_secret' => 'testsecret'
+  })
+end
+
+def stub_basic!
+  TwitterAuth.stub!(:config).and_return({
+    'strategy' => 'basic',
+    'encryption_key' => 'secretcode'
   })
 end
