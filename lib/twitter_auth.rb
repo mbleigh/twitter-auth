@@ -28,6 +28,8 @@ module TwitterAuth
     strat = config['strategy']
     raise ArgumentError, 'Invalid TwitterAuth Strategy: Valid strategies are oauth and basic.' unless %w(oauth basic).include?(strat)
     strat.to_sym
+  rescue Errno::ENOENT
+    :oauth
   end
 
   def self.oauth?

@@ -11,10 +11,7 @@ class TwitterAuth::GenericUser
   def self.table_name; 'twitter_auth_users' end
 end
 
-Object.send(:remove_const, :User)
-class User < TwitterAuth::OauthUser
-
-end
+class User < TwitterAuth::GenericUser; end
 
 require 'remarkable'
 require File.dirname(__FILE__) + '/fixtures/factories'
@@ -27,12 +24,11 @@ ActiveRecord::Base.logger = Logger.new(plugin_spec_dir + "/debug.log")
 load(File.dirname(__FILE__) + '/schema.rb')
 
 def define_basic_user_class!
-  Object.remove_const(:User)
-  Object.class_eval <<-RUBY
-    class User < TwitterAuth::BasicUser
+  TwitterAuth::GenericUser.send :include, TwitterAuth::BasicUser 
+end
 
-    end
-  RUBY
+def define_oauth_user_class!
+  TwitterAuth::GenericUser.send :include, TwitterAuth::OauthUser  
 end
 
 def stub_oauth!
@@ -41,6 +37,7 @@ def stub_oauth!
     'oauth_consumer_key' => 'testkey',
     'oauth_consumer_secret' => 'testsecret'
   })
+  define_oauth_user_class!
 end
 
 def stub_basic!
@@ -48,4 +45,7 @@ def stub_basic!
     'strategy' => 'basic',
     'encryption_key' => 'secretcode'
   })
+  define_basic_user_class!
 end
+
+define_oauth_user_class!

@@ -1,6 +1,7 @@
 # Gem Dependencies
 config.gem 'oauth'
 config.gem 'ezcrypto'
+config.gem 'httparty'
 
 require 'json'
 require 'twitter_auth'

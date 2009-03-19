@@ -11,8 +11,7 @@ end
 
 Factory.define(:twitter_basic_user, :class => User) do |u|
   u.login 'tweetkid'
-  u.crypted_password 'fixthislater'
-  u.salt 'ohsosalty'
+  u.password 'test'
 
   u.name 'Tweet Kid'
   u.description 'Twitter Man\'s trusty sidekick.'

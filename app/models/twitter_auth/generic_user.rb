@@ -52,5 +52,11 @@ module TwitterAuth
       assign_twitter_attributes(hash)
       save
     end
+
+    if TwitterAuth.oauth?
+      include TwitterAuth::OauthUser
+    else
+      include TwitterAuth::BasicUser
+    end
   end
 end
