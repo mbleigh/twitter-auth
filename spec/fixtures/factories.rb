@@ -10,9 +10,9 @@ Factory.define(:twitter_oauth_user, :class => User) do |u|
 end
 
 Factory.define(:twitter_basic_user, :class => User) do |u|
-  u.login 'tweetkid'
+  u.login 'twitterman'
   u.password 'test'
 
-  u.name 'Tweet Kid'
-  u.description 'Twitter Man\'s trusty sidekick.'
+  u.name 'Twitter Man'
+  u.description 'Saving the world for all Twitter kind.'
 end

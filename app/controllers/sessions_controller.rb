@@ -9,7 +9,17 @@ class SessionsController < ApplicationController
       url << "&oauth_callback=#{CGI.escape(TwitterAuth.oauth_callback)}" if TwitterAuth.oauth_callback?      
       redirect_to url
     else
-      
+      # we don't have to do anything, it's just a simple form for HTTP basic!
+    end
+  end
+
+  def create
+    logout_keeping_session!
+    if user = User.authenticate(params[:login], params[:password])
+      self.current_user = user
+      authentication_succeeded and return
+    else
+      authentication_failed('Unable to verify your credentials through Twitter. Please try again.', '/login') and return
     end
   end
 

@@ -1,0 +1,17 @@
+<% form_tag session_path, :id => 'login_form' do %>
+  <div class='field'>
+    <label for='login'>Twitter Username:</label>
+    <%= text_field_tag 'login', nil, :class => 'text_field' %>
+  </div>
+  <div class='field'>
+    <label for='password'>Password:</label>
+    <%= password_field_tag 'password', nil, :class => 'password_field' %>
+  </div>
+  <!--<div class='checkbox-field'>
+<%= check_box_tag 'remember_me' %> <label for='remember_me'>Keep Me Logged In</label>
+</div>-->
+  <div class='field submit'>
+    <%= submit_tag 'Log In', :class => 'submit' %>
+  </div>
+<% end %>
+

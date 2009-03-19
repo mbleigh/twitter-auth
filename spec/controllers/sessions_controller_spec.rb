@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SessionsController do
+  integrate_views
+
   describe 'routes' do
     it 'should route /session/new to SessionsController#new' do
       params_from(:get, '/session/new').should == {:controller => 'sessions', :action => 'new'}
@@ -20,6 +22,10 @@ describe SessionsController do
 
     it 'should route /oauth_callback to SessionsController#oauth_callback' do
       params_from(:get, '/oauth_callback').should == {:controller => 'sessions', :action => 'oauth_callback'}
+    end
+
+    it 'should route POST /session to SessionsController#create' do
+      params_from(:post, '/session').should == {:controller => 'sessions', :action => 'create'}
     end
   end
 
@@ -136,6 +142,54 @@ describe SessionsController do
         end
       end
     end
+  end
+
+  describe 'with Basic strategy' do
+    before do
+      stub_basic!
+    end
+    
+    describe '#new' do
+      it 'should render the new action' do
+        get :new
+        response.should render_template('sessions/new')
+      end
+
+      it 'should render the login form' do
+        get :new
+        response.should have_tag('form[action=/session][id=login_form][method=post]')
+      end
+      
+      describe '#create' do
+        before do
+          @user = Factory.create(:twitter_basic_user)
+        end
+
+        it 'should call logout_keeping_session! to remove session info' do
+          controller.should_receive(:logout_keeping_session!)
+          post :create
+        end
+
+        it 'should try to authenticate the user' do
+          User.should_receive(:authenticate)
+          post :create
+        end
+
+        it 'should call authentication_failed on authenticate failure' do
+          User.should_receive(:authenticate).and_return(nil)
+          post :create, :login => 'wrong', :password => 'false'
+          response.should redirect_to('/login')
+        end
+
+        it 'should call authentication_succeeded on authentication success' do
+          User.should_receive(:authenticate).and_return(@user)    
+          post :create, :login => 'twitterman', :password => 'cool'
+          response.should redirect_to('/')
+          flash[:notice].should_not be_blank
+        end
+      end
+    end
+
   end
 
   describe '#destroy' do
