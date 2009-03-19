@@ -1,14 +1,17 @@
 development:
   strategy: oauth
+  base_url: "https://twitter.com"
   oauth_consumer_key: devkey
   oauth_consumer_secret: devsecret
   oauth_callback: "http://localhost:3000"
 test:
   strategy: oauth
+  base_url: "https://twitter.com"
   oauth_consumer_key: testkey
   oauth_consumer_secret: testsecret
 production:
   strategy: oauth
+  base_url: "https://twitter.com"
   oauth_consumer_key: prodkey
   oauth_consumer_secret: prodsecret
 
