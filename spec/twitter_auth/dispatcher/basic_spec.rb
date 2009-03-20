@@ -47,6 +47,21 @@ describe TwitterAuth::Dispatcher::Basic do
       @net.should_receive(:start)
       lambda{@dispatcher.request(:get, '/fake')}.should raise_error(NoMethodError)
     end
+
+    it "should raise a TwitterAuth::Dispatcher::Error if response code isn't 200" do
+      FakeWeb.register_uri('https://twitter.com:443/bad_response.json', :string => {'error' => 'bad response'}.to_json, :status => ['401', 'Unauthorized'])
+      lambda{@dispatcher.request(:get, '/bad_response')}.should raise_error(TwitterAuth::Dispatcher::Error)
+    end
+
+    it 'should set the error message to the JSON message' do
+      FakeWeb.register_uri('https://twitter.com:443/bad_response.json', :string => {'error' => 'bad response'}.to_json, :status => ['401', 'Unauthorized'])
+      lambda{@dispatcher.request(:get, '/bad_response')}.should raise_error(TwitterAuth::Dispatcher::Error, 'bad response')
+    end
+
+    it 'should set the error message to the XML message' do
+      FakeWeb.register_uri('https://twitter.com:443/bad_response.xml', :string => "<hash>\n<request>/bad_response.xml</request>\n<error>bad response</error>\n</hash>", :status => ['401', 'Unauthorized'])
+      lambda{@dispatcher.request(:get, '/bad_response')}.should raise_error(TwitterAuth::Dispatcher::Error, 'bad response')
+    end
   end
 
   %w(get post delete put).each do |method|

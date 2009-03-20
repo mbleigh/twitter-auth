@@ -3,6 +3,8 @@ require 'oauth'
 module TwitterAuth
   module Dispatcher
     class Oauth < OAuth::AccessToken
+      include TwitterAuth::Dispatcher::Shared
+
       attr_accessor :user
 
       def initialize(user)
@@ -14,9 +16,8 @@ module TwitterAuth
       def request(http_method, path, *arguments)
         path << '.json' unless path.match(/\.(:?xml|json)\z/i)
         response = super
-        JSON.parse(response.body)
-      rescue JSON::ParserError
-        response.body
+
+        handle_response(response)
       end
     end
   end
