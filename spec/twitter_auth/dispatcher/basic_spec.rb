@@ -52,7 +52,11 @@ describe TwitterAuth::Dispatcher::Basic do
   %w(get post delete put).each do |method|
     it "should have a ##{method} method that calls request(:#{method})" do
       dispatcher = TwitterAuth::Dispatcher::Basic.new(@user)
-      dispatcher.should_receive(:request).with(method.to_sym, '/fake.json')
+      if %w(get delete).include?(method)
+        dispatcher.should_receive(:request).with(method.to_sym, '/fake.json')
+      else
+        dispatcher.should_receive(:request).with(method.to_sym, '/fake.json', '')
+      end
       dispatcher.send(method, '/fake.json')
     end
   end
