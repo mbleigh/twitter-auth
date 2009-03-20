@@ -13,12 +13,14 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
-    s.name = "the-perfect-gem"
-    s.summary = "TODO"
-    s.email = "josh@technicalpickles.com"
-    s.homepage = "http://github.com/technicalpickles/the-perfect-gem"
-    s.description = "TODO"
-    s.authors = ["Josh Nichols"]
+    s.name = "twitter-auth"
+    s.summary = "TwitterAuth is a Rails plugin gem that provides Single Sign-On capabilities for Rails applications via Twitter."
+    s.email = "michael@intridea.com"
+    s.homepage = "http://github.com/mbleigh/twitter-auth"
+    s.description = "TwitterAuth is a Rails plugin gem that provides Single Sign-On capabilities for Rails applications via Twitter. Both OAuth and HTTP Basic are supported."
+    s.authors = ["Michael Bleigh"]
+    s.add_dependency('oauth', '>= 0.3.1')
+    s.add_dependency('ezcrypto', '>= 0.7.2')
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
