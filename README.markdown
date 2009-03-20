@@ -6,6 +6,8 @@ TwitterAuth aims to provide a complete authentication and API access solution fo
 Installation
 ============
 
+**NOTE:** The GemPlugin version of TwitterAuth is currently broken...Rails isn't picking up namespaced models in the Engines. I'm working on a fix, but please use the plugin version until then.
+
 You can include TwitterAuth as a gem in your project like so:
 
     config.gem 'mbleigh-twitter-auth', :source => 'http://gems.github.com'
