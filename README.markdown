@@ -23,7 +23,7 @@ Usage
 
 To utilize TwitterAuth in your application you will need to run the generator:
 
-    script/generate twitter_auth [--oauth(default)|--basic]
+    script/generate twitter_auth [--oauth (default) | --basic]
 
 This will generate a migration as well as set up the stubs needed to use the Rails Engines controllers and models set up by TwitterAuth. It will also create a User class that inherits from TwitterUser, abstracting away all of the Twitter authentication functionality and leaving you a blank slate to work with for your application. 
 

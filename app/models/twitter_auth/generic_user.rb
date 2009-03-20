@@ -58,5 +58,13 @@ module TwitterAuth
     else
       include TwitterAuth::BasicUser
     end
+
+    def twitter
+      if TwitterAuth.oauth?
+        TwitterAuth::Dispatcher::Oauth.new(self)
+      else
+        TwitterAuth::Dispatcher::Basic.new(self)
+      end
+    end
   end
 end

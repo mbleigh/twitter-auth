@@ -23,6 +23,30 @@ describe TwitterAuth do
       TwitterAuth.stub!(:config).and_return({'api_timeout' => 15})
       TwitterAuth.api_timeout.should == 15
     end
+  end
+
+  describe '.net' do
+    before do
+      stub_basic!
+    end
+
+    it 'should return a Net::HTTP object' do
+      TwitterAuth.net.should be_a(Net::HTTP)
+    end
+
+    it 'should be SSL if the base_url is' do
+      TwitterAuth.stub!(:config).and_return({'base_url' => 'http://twitter.com'})
+      TwitterAuth.net.use_ssl?.should be_false
+      TwitterAuth.stub!(:config).and_return({'base_url' => 'https://twitter.com'})
+      TwitterAuth.net.use_ssl?.should be_true
+    end
+
+    it 'should work from the base_url' do
+      @net = Net::HTTP.new('example.com',80)
+      Net::HTTP.should_receive(:new).with('example.com',80).and_return(@net)
+      TwitterAuth.stub!(:config).and_return({'base_url' => 'http://example.com'})
+      TwitterAuth.net
+    end
   end 
 
   describe '#config' do

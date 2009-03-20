@@ -1,4 +1,6 @@
 module TwitterAuth
+  class Error < StandardError; end
+
   def self.config(environment=RAILS_ENV)
     @config ||= {}
     @config[environment] ||= YAML.load(File.open(RAILS_ROOT + '/config/twitter_auth.yml').read)[environment]
@@ -52,6 +54,16 @@ module TwitterAuth
       :site => TwitterAuth.base_url
     )
   end
+
+  def self.net
+    uri = URI.parse(TwitterAuth.base_url)
+    net = Net::HTTP.new(uri.host, uri.port)
+    net.use_ssl = uri.scheme == 'https'
+    net.read_timeout = TwitterAuth.api_timeout
+    net
+  end
 end
 
 require 'twitter_auth/controller_extensions'
+require 'twitter_auth/cryptify'
+require 'twitter_auth/dispatcher/oauth'

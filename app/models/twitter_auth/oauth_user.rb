@@ -33,6 +33,6 @@ module TwitterAuth
 
     def token
       OAuth::AccessToken.new(TwitterAuth.consumer, access_token, access_secret)
-    end
+    end 
   end
 end

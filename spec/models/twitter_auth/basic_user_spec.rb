@@ -105,4 +105,18 @@ describe TwitterAuth::BasicUser do
       user.password.should == 'test'
     end
   end
+
+  describe '#twitter' do
+    before do
+      @user = Factory.create(:twitter_basic_user)
+    end
+
+    it 'should be an instance of TwitterAuth::Dispatcher::Basic' do
+      @user.twitter.class.should == TwitterAuth::Dispatcher::Basic
+    end
+
+    it 'should have the correct user set' do
+      @user.twitter.user.should == @user
+    end
+  end
 end
