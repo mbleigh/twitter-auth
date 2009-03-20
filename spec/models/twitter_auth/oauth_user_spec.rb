@@ -34,7 +34,16 @@ describe TwitterAuth::OauthUser do
 
     it 'should return the user if he/she exists' do
       user = Factory.create(:twitter_oauth_user, :login => 'twitterman')
+      user.reload
       User.identify_or_create_from_access_token(@token).should == user
+    end
+
+    it 'should update the access_token and access_secret for the user if he/she exists' do
+      user = Factory.create(:twitter_oauth_user, :login => 'twitterman', :access_token => 'someothertoken', :access_secret => 'someothersecret')
+      User.identify_or_create_from_access_token(@token)
+      user.reload
+      user.access_token.should == @token.token
+      user.access_secret.should == @token.secret
     end
 
     it 'should update the user\'s attributes based on the twitter info' do
