@@ -43,6 +43,24 @@ TwitterAuth borrows heavily from [Restful Authentication](http://github.com/tech
 * `store_location`: store the current URL for returning to when a `redirect_back_or_default` is called.
 * `authorized?`: override this to add fine-grained access control for when `login_required` is already called.
 
+Accessing the Twitter API
+-------------------------
+
+Obviously if you're using Twitter as an authentication strategy you probably have interest in accessing Twitter API information as well. Because I wasn't really satisfied with either of the popular Twitter API Ruby libraries ([Twitter4R](http://twitter4r.rubyforge.org) and [Twitter](http://twitter.rubyforge.org)) and also because neither support OAuth (yet), I decided to go with a simple, dependency-free API implementation.
+
+The `User` class will have a `twitter` method that provides a generic dispatcher with HTTP verb commands available (`get`, `put`, `post`, and `delete`). These are automatically initialized to the `base_url` you specified in the `twitter_auth.yml` file, so you need only specify a path. Additionally, it will automatically append a .json extension and parse the JSON if you don't provide (it returns strings for XML because, well, I don't like XML and don't feel like parsing it).
+
+    # This code will work with the OAuth and Basic strategies alike.
+    user = User.find_by_login('mbleigh')
+
+    user.twitter.get('/account/verify_credentials')
+    # => {'screen_name' => 'mbleigh', 'name' => 'Michael Bleigh' ... }
+
+    user.twitter.post('/statuses/update.json', 'status' => 'This is my status.')
+    # => {"user"=>{"login" => "mbleigh" ... }, "text"=>"This is my status.", "id"=>1234567890 ... }
+
+This area of the code is still a little raw, but hopefully will evolve to be a little more user-friendly as TwitterAuth matures. In the meantime, it's a perfectly workable foundation library, and the fact that it works the same with OAuth and HTTP Basic makes it all the better!
+
 Customizing TwitterAuth
 -----------------------
 
