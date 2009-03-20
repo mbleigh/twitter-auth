@@ -8,7 +8,7 @@ Installation
 
 You can include TwitterAuth as a gem in your project like so:
 
-    config.gem 'mbleigh-twitter-auth', :source => 'http://gems.github.com', :lib => 'twitter_auth'
+    config.gem 'twitter-auth', :lib => 'twitter_auth'
 
 Or you can install it as a traditional Rails plugin:
 

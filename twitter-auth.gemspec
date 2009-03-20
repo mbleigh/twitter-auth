@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{twitter-auth}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Bleigh"]
@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/mbleigh/twitter-auth}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{twitter-auth}
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{TwitterAuth is a Rails plugin gem that provides Single Sign-On capabilities for Rails applications via Twitter.}
 
