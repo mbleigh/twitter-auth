@@ -24,6 +24,7 @@ s.files =  FileList["[A-Z]*", "{bin,generators,lib,spec,config,app,rails}/**/*"]
     s.authors = ["Michael Bleigh"]
     s.add_dependency('oauth', '>= 0.3.1')
     s.add_dependency('ezcrypto', '>= 0.7.2')
+    s.rubyforge_project = 'twitter-auth'
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
