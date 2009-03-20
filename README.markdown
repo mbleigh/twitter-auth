@@ -59,6 +59,8 @@ The `User` class will have a `twitter` method that provides a generic dispatcher
     user.twitter.post('/statuses/update.json', 'status' => 'This is my status.')
     # => {"user"=>{"login" => "mbleigh" ... }, "text"=>"This is my status.", "id"=>1234567890 ... }
 
+If Twitter returns something other than a 200 response code, TwitterAuth will catch it and try to raise a salient error message. The exception class is `TwitterAuth::Dispatcher::Error` if you're in the mood to catch it.
+
 This area of the code is still a little raw, but hopefully will evolve to be a little more user-friendly as TwitterAuth matures. In the meantime, it's a perfectly workable foundation library, and the fact that it works the same with OAuth and HTTP Basic makes it all the better!
 
 Customizing TwitterAuth
