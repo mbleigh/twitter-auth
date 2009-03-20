@@ -10,12 +10,13 @@ module TwitterAuth
         self.user = user
       end
 
-      def request(http_method, path, *arguments)
+      def request(http_method, path, body=nil, *arguments)
         path << '.json' unless path.match(/\.(:?xml|json)\z/i)
 
         response = TwitterAuth.net.start{ |http|
           req = "Net::HTTP::#{http_method.to_s.capitalize}".constantize.new(path, *arguments)
           req.basic_auth user.login, user.password
+          req.set_form_data(body) unless body.nil?
           http.request(req)
         }
         
@@ -28,12 +29,12 @@ module TwitterAuth
         request(:get, path, *arguments)
       end
 
-      def post(path, *arguments)
-        request(:post, path, *arguments)
+      def post(path, body='', *arguments)
+        request(:post, path, body, *arguments)
       end
 
-      def put(path, *arguments)
-        request(:put, path, *arguments)
+      def put(path, body='', *arguments)
+        request(:put, path, body, *arguments)
       end
 
       def delete(path, *arguments)
