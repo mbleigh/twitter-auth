@@ -33,7 +33,7 @@ module TwitterAuth
     end
 
     def login_required
-      authorized? || authentication_failed 
+      authorized? || access_denied 
     end
 
     def access_denied
