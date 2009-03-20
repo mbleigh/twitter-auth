@@ -15,7 +15,10 @@ module TwitterAuth
         user_info = JSON.parse(token.get('/account/verify_credentials.json').body)
 
         if user = User.find_by_login(user_info['screen_name'])
-          user.update_twitter_attributes(user_info)
+          user.assign_twitter_attributes(user_info)
+          user.access_token = token.token
+          user.access_secret = token.secret
+          user.save
           user
         else
           User.create_from_twitter_hash_and_token(user_info, token) 
