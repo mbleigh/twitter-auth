@@ -45,6 +45,21 @@ describe TwitterAuth::Dispatcher::Oauth do
       @dispatcher.request(:get, '/fake').should == @dispatcher.request(:get, '/fake.json')
     end
 
+    it "should raise a TwitterAuth::Dispatcher::Error if response code isn't 200" do
+      FakeWeb.register_uri('https://twitter.com:443/bad_response.json', :string => {'error' => 'bad response'}.to_json, :status => ['401', 'Unauthorized'])
+      lambda{@dispatcher.request(:get, '/bad_response')}.should raise_error(TwitterAuth::Dispatcher::Error)
+    end
+
+    it 'should set the error message to the JSON message' do
+      FakeWeb.register_uri('https://twitter.com:443/bad_response.json', :string => {'error' => 'bad response'}.to_json, :status => ['401', 'Unauthorized'])
+      lambda{@dispatcher.request(:get, '/bad_response')}.should raise_error(TwitterAuth::Dispatcher::Error, 'bad response')
+    end
+
+    it 'should set the error message to the XML message' do
+      FakeWeb.register_uri('https://twitter.com:443/bad_response.xml', :string => "<hash>\n<request>/bad_response.xml</request>\n<error>bad response</error>\n</hash>", :status => ['401', 'Unauthorized'])
+      lambda{@dispatcher.request(:get, '/bad_response')}.should raise_error(TwitterAuth::Dispatcher::Error, 'bad response')
+    end
+
     it 'should work with verb methods' do
       @dispatcher.get('/fake').should == @dispatcher.request(:get, '/fake')
     end

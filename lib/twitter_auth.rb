@@ -67,3 +67,7 @@ end
 require 'twitter_auth/controller_extensions'
 require 'twitter_auth/cryptify'
 require 'twitter_auth/dispatcher/oauth'
+require 'twitter_auth/dispatcher/basic'
+require 'twitter_auth/dispatcher/shared'
+
+class TwitterAuth::Dispatcher::Error < StandardError; end

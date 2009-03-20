@@ -3,6 +3,8 @@ require 'net/http'
 module TwitterAuth
   module Dispatcher
     class Basic
+      include TwitterAuth::Dispatcher::Shared
+
       attr_accessor :user
 
       def initialize(user)
@@ -20,9 +22,7 @@ module TwitterAuth
           http.request(req)
         }
         
-        JSON.parse(response.body)
-      rescue JSON::ParserError
-        response.body
+        handle_response(response)      
       end
 
       def get(path, *arguments)
