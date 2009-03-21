@@ -133,5 +133,10 @@ describe TwitterAuth::GenericUser do
       user2 = Factory(:twitter_oauth_user, :login => 'walker', :remember_token => 'ghijkl', :remember_token_expires_at => (Time.now - 10.days))
       User.from_remember_token('ghijkl').should be_nil
     end
+
+    it 'should not find a user with a nil token and an expiration' do
+      user = Factory(:twitter_oauth_user, :login => 'stranger', :remember_token => nil, :remember_token_expires_at => (Time.now + 10.days))
+      User.from_remember_token(nil).should be_nil
+    end
   end
 end
