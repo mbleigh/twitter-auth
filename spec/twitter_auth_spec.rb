@@ -13,7 +13,7 @@ describe TwitterAuth do
     end
   end
 
-  describe '#api_timeout' do
+  describe '.api_timeout' do
     it 'should default to 10' do
       TwitterAuth.stub!(:config).and_return({})
       TwitterAuth.api_timeout.should == 10
@@ -22,6 +22,18 @@ describe TwitterAuth do
     it 'should be settable via config' do
       TwitterAuth.stub!(:config).and_return({'api_timeout' => 15})
       TwitterAuth.api_timeout.should == 15
+    end
+  end
+
+  describe '.remember_for' do
+    it 'should default to 14' do
+      TwitterAuth.stub!(:config).and_return({})
+      TwitterAuth.remember_for.should == 14
+    end
+
+    it 'should be settable via config' do
+      TwitterAuth.stub!(:config).and_return({'remember_for' => '7'})
+      TwitterAuth.remember_for.should == 7
     end
   end
 

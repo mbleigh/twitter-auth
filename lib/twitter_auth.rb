@@ -27,6 +27,10 @@ module TwitterAuth
     config['oauth_callback']
   end
 
+  def self.remember_for
+    (config['remember_for'] || 14).to_i
+  end
+
   # The authentication strategy employed by this
   # application. Set in +config/twitter.yml+ as
   # strategy; valid options are oauth or basic.

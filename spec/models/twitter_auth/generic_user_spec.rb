@@ -5,11 +5,17 @@ describe TwitterAuth::GenericUser do
   should_validate_format_of :login, 'some_guy', 'awesome', 'cool_man'
   should_not_validate_format_of :login, 'with-dashes', 'with.periods', 'with spaces'
   should_validate_length_of :login, :in => 1..15
- 
+  
   it 'should validate uniqueness of login' do
     Factory.create(:twitter_oauth_user)
     Factory.build(:twitter_oauth_user).should have_at_least(1).errors_on(:login)
   end
+
+  it 'should validate uniqueness of remember_token' do
+    Factory.create(:twitter_oauth_user, :remember_token => 'abc')
+    Factory.build(:twitter_oauth_user, :remember_token => 'abc').should have_at_least(1).errors_on(:remember_token)
+  end
+
 
   it 'should allow capital letters in the username' do
     Factory.build(:twitter_oauth_user, :login => 'TwitterMan').should have(:no).errors_on(:login)
@@ -52,6 +58,65 @@ describe TwitterAuth::GenericUser do
     it 'should not throw an error with extraneous info' do
       user = Factory.create(:twitter_oauth_user, :name => "Dude", :description => "Awesome, man.")
       lambda{user.update_twitter_attributes({'name' => 'Twitter Man', 'description' => 'Works.', 'whoopsy' => 'noworks.'})}.should_not raise_error
+    end
+  end
+
+  describe '#remember_me' do
+    before do
+      @user = Factory(:twitter_oauth_user)
+    end
+
+    it 'should check for the remember_token column' do
+      @user.should_receive(:respond_to?).with(:remember_token).and_return(false)
+      @user.remember_me
+    end
+
+    it 'should return nil if there is no remember_token column' do
+      @user.should_receive(:respond_to?).with(:remember_token).and_return(false)
+      @user.remember_me.should be_false
+    end
+    
+    describe ' with proper columns' do
+      it 'should generate a secure random token' do
+        ActiveSupport::SecureRandom.should_receive(:hex).with(10).and_return('abcdef')
+        @user.remember_me
+        @user.remember_token.should == 'abcdef'
+      end
+
+      it 'should set the expiration to the current time plus the remember_for period' do
+        TwitterAuth.stub!(:remember_for).and_return(10)
+        time = Time.now
+        Time.stub!(:now).and_return(time)
+
+        @user.remember_me
+
+        @user.remember_token_expires_at.should == Time.now + 10.days
+      end
+    end
+  end
+
+  describe '#forget_me' do
+    it 'should reset remember_token and remember_token_expires_at' do
+      @user = Factory(:twitter_oauth_user, :remember_token => "abcdef", :remember_token_expires_at => Time.now + 10.days)
+      @user.forget_me
+      @user.reload
+      @user.remember_token.should be_nil
+      @user.remember_token_expires_at.should be_nil
+    end
+  end
+
+  describe '.from_remember_token' do
+    before do
+      @user = Factory(:twitter_oauth_user, :remember_token => 'abcdef', :remember_token_expires_at => (Time.now + 10.days))
+    end
+
+    it 'should find the user with the specified remember_token' do
+      User.from_remember_token('abcdef').should == @user
+    end
+
+    it 'should not find a user with an expired token' do
+      user2 = Factory(:twitter_oauth_user, :login => 'walker', :remember_token => 'ghijkl', :remember_token_expires_at => (Time.now - 10.days))
+      User.from_remember_token('ghijkl').should be_nil
     end
   end
 end
