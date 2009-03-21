@@ -10,6 +10,9 @@ class TwitterAuthMigration < ActiveRecord::Migration
       t.string :salt
 <% end -%>
 
+      t.string :remember_token
+      t.datetime :remember_token_expires_at
+
       # This information is automatically kept
       # in-sync at each login of the user. You
       # may remove any/all of these columns.
