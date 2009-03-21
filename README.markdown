@@ -76,6 +76,10 @@ TwitterAuth provides some default controller methods that may be overridden in y
 * `authentication_succeeded(message=default)`: called when Twitter authorization has completed successfully. By default, simply redirects to the site root and sets the `flash[:notice]`.
 * `access_denied`: what happens when the `login_required` before filter fails. By default it stores the current location to return to and redirects to the login process.
 
+Resources
+---------
+
+* **Bug Reports:** See the [Lighthouse Project](http://mbleigh.lighthouseapp.com/projects/27783-twitterauth) to report any problems you have using TwitterAuth.
 
 Copyright
 ---------
