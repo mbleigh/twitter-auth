@@ -35,9 +35,18 @@ class TwitterAuthTestController < ApplicationController
     logout_keeping_session!
     redirect_back_or_default('/')
   end
+
+  def current_user_action
+    @user = current_user
+    render :nothing => true
+  end
 end
 
 describe TwitterAuthTestController do
+  before do
+    controller.stub!(:cookies).and_return({})
+  end
+
   %w(authentication_failed authentication_succeeded current_user authorized? login_required access_denied store_location redirect_back_or_default logout_keeping_session!).each do |m|
     it "should respond to the extension method '#{m}'" do
       controller.should respond_to(m)
@@ -72,19 +81,21 @@ describe TwitterAuthTestController do
     it 'should find the user based on the session user_id' do
       user = Factory.create(:twitter_oauth_user)
       request.session[:user_id] = user.id
-      controller.send(:current_user).should == user
+      get(:current_user_action)
+      assigns[:user].should == user
+    end
+
+    it 'should log the user in through a cookie' do
+      user = Factory(:twitter_oauth_user, :remember_token => 'abc', :remember_token_expires_at => (Time.now + 10.days))
+      controller.stub!(:cookies).and_return({:remember_token => 'abc'})
+      get :current_user_action
+      assigns[:user].should == user
     end
 
     it 'should return nil if there is no user matching that id' do
       request.session[:user_id] = 2345
-      controller.send(:current_user).should be_nil
-    end
-
-    it 'should memoize the result (and not do a double find)' do
-      user = Factory.create(:twitter_oauth_user)
-      User.should_receive(:find_by_id).once.and_return(user)
-      controller.send(:current_user).should == user
-      controller.send(:current_user).should == user
+      get :current_user_action
+      assigns[:user].should be_nil
     end
   end
 
@@ -141,6 +152,11 @@ describe TwitterAuthTestController do
       controller.send(:current_user).should == @user
       get :logout_keeping_session_action
       controller.send(:current_user).should be_nil
+    end
+
+    it 'should unset the cookie' do
+      controller.send(:cookies).should_receive(:delete).with(:remember_token)
+      get :logout_keeping_session_action
     end
   end
 end

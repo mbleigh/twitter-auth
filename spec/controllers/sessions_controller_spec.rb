@@ -82,6 +82,12 @@ describe SessionsController do
       describe 'with proper info' do
         before do
           @user = Factory.create(:twitter_oauth_user)
+          @time = Time.now
+          @remember_token = ActiveSupport::SecureRandom.hex(10)
+          
+          Time.stub!(:now).and_return(@time)
+          ActiveSupport::SecureRandom.stub!(:hex).and_return(@remember_token)
+
           request.session[:request_token] = 'faketoken'
           request.session[:request_token_secret] = 'faketokensecret'
           get :oauth_callback, :oauth_token => 'faketoken'
@@ -115,6 +121,15 @@ describe SessionsController do
 
           it "should assign the user id to the session" do
             session[:user_id].should == @user.id
+          end
+
+          it "should call remember me" do
+            @user.reload
+            @user.remember_token.should == @remember_token
+          end
+
+          it "should set a cookie" do
+            cookies[:remember_token].should == @remember_token
           end
         end
 

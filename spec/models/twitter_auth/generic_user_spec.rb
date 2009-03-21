@@ -16,7 +16,6 @@ describe TwitterAuth::GenericUser do
     Factory.build(:twitter_oauth_user, :remember_token => 'abc').should have_at_least(1).errors_on(:remember_token)
   end
 
-
   it 'should allow capital letters in the username' do
     Factory.build(:twitter_oauth_user, :login => 'TwitterMan').should have(:no).errors_on(:login)
   end
@@ -91,6 +90,22 @@ describe TwitterAuth::GenericUser do
         @user.remember_me
 
         @user.remember_token_expires_at.should == Time.now + 10.days
+      end
+
+      it 'should return a hash with a :value and :expires key' do
+        result = @user.remember_me
+        result.should be_a(Hash)
+        result.key?(:value).should be_true
+        result.key?(:expires).should be_true
+      end
+
+      it 'should return a hash with appropriate values' do
+        TwitterAuth.stub!(:remember_for).and_return(10)
+        time = Time.now
+        Time.stub!(:now).and_return(time)
+        ActiveSupport::SecureRandom.stub!(:hex).and_return('abcdef')
+
+        @user.remember_me.should == {:value => 'abcdef', :expires => (Time.now + 10.days)}
       end
     end
   end
