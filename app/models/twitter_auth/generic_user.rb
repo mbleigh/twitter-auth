@@ -23,9 +23,9 @@ module TwitterAuth
     ]
     
     validates_presence_of :login
-    validates_format_of :login, :with => /\A[a-z0-9_]+\z/
+    validates_format_of :login, :with => /\A[a-z0-9_]+\z/i
     validates_length_of :login, :in => 1..15
-    validates_uniqueness_of :login
+    validates_uniqueness_of :login, :case_sensitive => false
     
     def self.table_name; 'users' end
 

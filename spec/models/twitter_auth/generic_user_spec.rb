@@ -11,6 +11,15 @@ describe TwitterAuth::GenericUser do
     Factory.build(:twitter_oauth_user).should have_at_least(1).errors_on(:login)
   end
 
+  it 'should allow capital letters in the username' do
+    Factory.build(:twitter_oauth_user, :login => 'TwitterMan').should have(:no).errors_on(:login)
+  end
+
+  it 'should not allow the same login with different capitalization' do
+    Factory.create(:twitter_oauth_user, :login => 'twitterman')
+    Factory.build(:twitter_oauth_user, :login => 'TwitterMan').should have_at_least(1).errors_on(:login)
+  end
+
   describe '.new_from_twitter_hash' do
     it 'should raise an argument error if the hash does not have a screen_name attribute' do
       lambda{User.new_from_twitter_hash({})}.should raise_error(ArgumentError, 'Invalid hash: must include screen_name.')
