@@ -77,6 +77,10 @@ module TwitterAuth
 
       self.remember_token = ActiveSupport::SecureRandom.hex(10)
       self.remember_token_expires_at = Time.now + TwitterAuth.remember_for.days
+      
+      save
+
+      {:value => self.remember_token, :expires => self.remember_token_expires_at}
     end
 
     def forget_me
