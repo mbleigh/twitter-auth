@@ -1,24 +1,27 @@
 <% if options[:oauth] -%>
 development:
   strategy: oauth
-  base_url: "https://twitter.com"
-  api_timeout: 10
   oauth_consumer_key: devkey
   oauth_consumer_secret: devsecret
+  base_url: "https://twitter.com"
+  api_timeout: 10
+  remember_for: 14 # days
   oauth_callback: "http://localhost:3000/oauth_callback"
 test:
   strategy: oauth
-  base_url: "https://twitter.com"
-  api_timeout: 10
   oauth_consumer_key: testkey
   oauth_consumer_secret: testsecret
+  base_url: "https://twitter.com"
+  api_timeout: 10
+  remember_for: 14 # days
   oauth_callback: "http://localhost:3000/oauth_callback"
 production:
   strategy: oauth
-  api_timeout: 10
-  base_url: "https://twitter.com"
   oauth_consumer_key: prodkey
   oauth_consumer_secret: prodsecret
+  base_url: "https://twitter.com"
+  api_timeout: 10
+  remember_for: 14 # days
 <% else -%>
 development:
   strategy: basic
@@ -26,13 +29,16 @@ development:
   base_url: "https://twitter.com"
   # randomly generated key for encrypting Twitter passwords
   encryption_key: "<%= key = ActiveSupport::SecureRandom.hex(12) %>"
+  remember_for: 14 # days
 test:
   strategy: basic
   api_timeout: 10
   base_url: "https://twitter.com"
   encryption_key: "<%= key %>"
+  remember_for: 14 # days
 production:
   strategy: basic
   api_timeout: 10
   encryption_key: "<%= key %>"
+  remember_for: 14 # days
 <% end %>
