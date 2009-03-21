@@ -10,6 +10,10 @@ ActiveRecord::Schema.define :version => 0 do
     t.binary :crypted_password
     t.string :salt
 
+    # Remember token fields
+    t.string :remember_token
+    t.datetime :remember_token_expires_at
+
     # This information is automatically kept
     # in-sync at each login of the user. You
     # may remove any/all of these columns.

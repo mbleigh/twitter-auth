@@ -1,7 +1,7 @@
 module TwitterAuth
   class GenericUser < ActiveRecord::Base
-    attr_protected :login
-
+    attr_protected :login, :remember_token, :remember_token_expires_at
+    
     TWITTER_ATTRIBUTES = [
       :name,
       :location,
@@ -26,6 +26,7 @@ module TwitterAuth
     validates_format_of :login, :with => /\A[a-z0-9_]+\z/i
     validates_length_of :login, :in => 1..15
     validates_uniqueness_of :login, :case_sensitive => false
+    validates_uniqueness_of :remember_token, :allow_blank => true
     
     def self.table_name; 'users' end
 
@@ -40,6 +41,10 @@ module TwitterAuth
       end
 
       user
+    end
+
+    def self.from_remember_token(token)
+      first(:conditions => ["remember_token = ? AND remember_token_expires_at > ?", token, Time.now])
     end
       
     def assign_twitter_attributes(hash)
@@ -65,6 +70,18 @@ module TwitterAuth
       else
         TwitterAuth::Dispatcher::Basic.new(self)
       end
+    end
+
+    def remember_me
+      return false unless respond_to?(:remember_token)
+
+      self.remember_token = ActiveSupport::SecureRandom.hex(10)
+      self.remember_token_expires_at = Time.now + TwitterAuth.remember_for.days
+    end
+
+    def forget_me
+      self.remember_token = self.remember_token_expires_at = nil
+      self.save
     end
   end
 end
