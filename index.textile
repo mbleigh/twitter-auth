@@ -1,0 +1,36 @@
+---
+layout: master
+title: Near-Instant Twitter Apps For Rails
+---
+
+h1. What is TwitterAuth?
+
+TwitterAuth is a plugin for Rails that allows you to use Twitter as your authentication provider. This means that people can log in to your application using their Twitter username and password instead of creating new ones.
+
+TwitterAuth works both with *OAuth* and *HTTP Basic* connections to the Twitter API giving you maximum choice and flexibility.
+
+h1. How do I install it?
+
+TwitterAuth is a GemPlugin and is best used by adding the following to your <code>config/environment.rb</code>:
+
+<pre>config.gem 'twitter-auth', :lib => 'twitter_auth'</pre>
+
+You can also install it into your application as a traditional Rails plugin:
+
+<pre>script/install git://github.com/mbleigh/twitter-auth.git</pre>
+
+h1. How do I use it?
+
+To get up and running just run the generator:
+
+<pre>script/generate twitter_auth</pre>
+
+For more detailed usage instructions please read over the "README":http://github.com/mbleigh/twitter-auth
+
+h1. Who is using it?
+
+TwitterAuth is already being used by some great applications! If you have one to add to the list, please "send me an e-mail":mailto:michael@intridea.com and I'll add it.
+
+<div class='using-it'>
+* "*Pix.im*":http://pix.im by "@jimneath":http://twitter.com/jimneath
+</div>
