@@ -6,14 +6,16 @@ module TwitterAuth
       end
 
       base.extend TwitterAuth::OauthUser::ClassMethods
+      base.extend TwitterAuth::Dispatcher::Shared
     end
     
     module ClassMethods
       def identify_or_create_from_access_token(token, secret=nil)
         raise ArgumentError, 'Must authenticate with an OAuth::AccessToken or the string access token and secret.' unless (token && secret) || token.is_a?(OAuth::AccessToken)
-
-        user_info = JSON.parse(token.get('/account/verify_credentials.json').body)
-
+        
+        response = token.get(TwitterAuth.path_prefix + '/account/verify_credentials.json')
+        user_info = handle_response(response)
+        
         if user = User.find_by_login(user_info['screen_name'])
           user.assign_twitter_attributes(user_info)
           user.access_token = token.token

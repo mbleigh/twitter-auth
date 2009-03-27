@@ -16,7 +16,7 @@ module TwitterAuth
       def request(http_method, path, *arguments)
         path = TwitterAuth.path_prefix + path
         path = append_extension_to(path)
-       
+
         response = super
 
         handle_response(response)
