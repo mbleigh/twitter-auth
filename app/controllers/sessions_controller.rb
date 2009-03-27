@@ -48,7 +48,7 @@ class SessionsController < ApplicationController
     cookies[:remember_token] = @user.remember_me
 
     authentication_succeeded 
-  rescue Net::HTTPServerException => e
+  rescue Net::HTTPServerException, Net::HTTPFatalError => e
     case e.message
       when '401 "Unauthorized"'
         authentication_failed('This authentication request is no longer valid. Please try again.') and return
