@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe TwitterAuth do
-  describe '#base_url' do
+  describe '.base_url' do
     it 'should have default to https://twitter.com' do
       TwitterAuth.stub!(:config).and_return({})
       TwitterAuth.base_url.should == 'https://twitter.com'
@@ -10,6 +10,18 @@ describe TwitterAuth do
     it 'should otherwise load from the config[base_url]' do
       TwitterAuth.stub!(:config).and_return({'base_url' => 'https://example.com'})
       TwitterAuth.base_url.should == 'https://example.com'
+    end
+  end
+
+  describe ".path_prefix" do
+    it 'should be blank if the base url does not have a path' do
+      TwitterAuth.stub!(:base_url).and_return("https://twitter.com:443")
+      TwitterAuth.path_prefix.should == ""
+    end
+
+    it 'should return the path prefix if one exists' do
+      TwitterAuth.stub!(:base_url).and_return("https://api.presentlyapp.com/api/twitter")
+      TwitterAuth.path_prefix.should == "/api/twitter"
     end
   end
 

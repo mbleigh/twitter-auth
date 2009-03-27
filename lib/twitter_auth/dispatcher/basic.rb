@@ -13,6 +13,7 @@ module TwitterAuth
       end
 
       def request(http_method, path, body=nil, *arguments)
+        path = TwitterAuth.path_prefix + path
         path = append_extension_to(path)
 
         response = TwitterAuth.net.start{ |http|
