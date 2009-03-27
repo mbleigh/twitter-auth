@@ -1,6 +1,12 @@
 module TwitterAuth
   module Dispatcher
     module Shared
+      def append_extension_to(path)
+        path, query_string = *(path.split("?"))
+        path << '.json' unless path.match(/\.(:?xml|json)\z/i)
+        "#{path}#{"?#{query_string}" if query_string}"
+      end
+
       def handle_response(response)
         case response
         when Net::HTTPOK 

@@ -13,7 +13,7 @@ module TwitterAuth
       end
 
       def request(http_method, path, body=nil, *arguments)
-        path << '.json' unless path.match(/\.(:?xml|json)\z/i)
+        path = append_extension_to(path)
 
         response = TwitterAuth.net.start{ |http|
           req = "Net::HTTP::#{http_method.to_s.capitalize}".constantize.new(path, *arguments)

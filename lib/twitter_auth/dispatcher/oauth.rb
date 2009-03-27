@@ -14,7 +14,8 @@ module TwitterAuth
       end
 
       def request(http_method, path, *arguments)
-        path << '.json' unless path.match(/\.(:?xml|json)\z/i)
+        path = append_extension_to(path)
+       
         response = super
 
         handle_response(response)
