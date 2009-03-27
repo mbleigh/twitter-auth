@@ -10,6 +10,10 @@ module TwitterAuth
     config['base_url'] || 'https://twitter.com'    
   end
 
+  def self.path_prefix
+    URI.parse(base_url).path
+  end
+
   def self.api_timeout
     config['api_timeout'] || 10
   end
