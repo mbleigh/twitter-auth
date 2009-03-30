@@ -78,4 +78,10 @@ require 'twitter_auth/dispatcher/oauth'
 require 'twitter_auth/dispatcher/basic'
 require 'twitter_auth/dispatcher/shared'
 
-class TwitterAuth::Dispatcher::Error < StandardError; end
+module TwitterAuth
+  module Dispatcher
+    class Error < StandardError; end
+    class Unauthorized < Error; end
+  end
+end
+
