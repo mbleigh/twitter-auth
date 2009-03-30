@@ -16,7 +16,7 @@ module TwitterAuth
             response.body
           end
         when Net::HTTPUnauthorized
-          raise TwitterAuth::Dispatcher::Error, 'The credentials provided did not authorize the user.'
+          raise TwitterAuth::Dispatcher::Unauthorized, 'The credentials provided did not authorize the user.'
         else
           message = begin
             JSON.parse(response.body)['error']
