@@ -15,7 +15,7 @@ module TwitterAuth
       :profile_sidebar_border_color,
       :profile_text_color,
       :profile_background_image_url,
-      :profile_background_tiled,
+      :profile_background_tile,
       :friends_count,
       :statuses_count,
       :followers_count,      
