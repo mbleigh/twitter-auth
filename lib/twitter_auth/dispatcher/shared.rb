@@ -1,6 +1,10 @@
 module TwitterAuth
   module Dispatcher
     module Shared
+      def post!(status)
+        self.post('/statuses/update.json', :status => status)
+      end
+
       def append_extension_to(path)
         path, query_string = *(path.split("?"))
         path << '.json' unless path.match(/\.(:?xml|json)\z/i)
