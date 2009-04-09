@@ -54,6 +54,12 @@ module TwitterAuth
     strategy == :basic
   end
   
+  # The dispatcher is the TwitterDispatch instance
+  # used to relay all requests to the Twitter API.
+  def self.dispatcher
+    
+  end
+
   # The OAuth consumer used by TwitterAuth for authentication. The consumer key and secret are set in your application's +config/twitter.yml+
   def self.consumer
     OAuth::Consumer.new(
