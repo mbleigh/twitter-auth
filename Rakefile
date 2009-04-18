@@ -18,7 +18,7 @@ begin
     s.email = "michael@intridea.com"
     s.homepage = "http://github.com/mbleigh/twitter-auth"
     s.description = "TwitterAuth is a Rails plugin gem that provides Single Sign-On capabilities for Rails applications via Twitter. Both OAuth and HTTP Basic are supported."
-s.files =  FileList["[A-Z]*", "{bin,generators,lib,spec,config,app,rails}/**/*"]
+s.files =  FileList["[A-Z]*", "{bin,generators,lib,spec,config,app,rails}/**/*"] - FileList["**/*.log"]
     
     s.authors = ["Michael Bleigh"]
     s.add_dependency('oauth', '>= 0.3.1')
