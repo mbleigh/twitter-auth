@@ -11,6 +11,12 @@ describe TwitterAuth do
       TwitterAuth.stub!(:config).and_return({'base_url' => 'https://example.com'})
       TwitterAuth.base_url.should == 'https://example.com'
     end
+
+    it 'should utilize oauth consumer settings' do
+      @config = TwitterAuth.config
+      TwitterAuth.stub!(:config).and_return(@config.merge('authorize_path' => '/somewhere_else'))
+      TwitterAuth.consumer.authorize_path.should == '/somewhere_else'
+    end
   end
 
   describe ".path_prefix" do
