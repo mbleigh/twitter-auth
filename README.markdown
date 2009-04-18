@@ -29,6 +29,15 @@ This will generate a migration as well as set up the stubs needed to use the Rai
 
 Finally, it will create a configuration file in `config/twitter_auth.yml` in which you should input your OAuth consumer key and secret (if using the OAuth strategy) as well as a custom callback for development (the `oauth_callback` option is where Twitter will send the browser after authentication is complete. If you leave it blank Twitter will send it to the URL set up when you registered your application).
 
+Sign in with Twitter
+--------------------
+
+Twitter recently implemented a convenience layer on top of OAuth called [Sign in with Twitter](http://apiwiki.twitter.com/Sign-in-with-Twitter). TwitterAuth makes use of this by default by setting the `authorize_path` in `twitter_auth.yml`.
+
+If you already have an application utilizing TwitterAuth that you would like to utilize the new system, simply add this line to your `twitter_auth.yml` in each environment:
+
+    authorize_path: "/oauth/authenticate"
+
 Usage Basics
 ------------
 
@@ -84,7 +93,7 @@ Tips and Tricks
 Resources
 ---------
 
-* **Bug Reports:** See the [Lighthouse Project](http://mbleigh.lighthouseapp.com/projects/27783-twitterauth) to report any problems you have using TwitterAuth.
+* **Bug Reports:** See the [Issues Page](http://github.com/mbleigh/twitter-auth/issues) to report any problems you have using TwitterAuth.
 * **Blog Post:** The [original blog post about TwitterAuth](http://intridea.com/2009/3/23/twitter-auth-for-near-instant-twitter-apps) has a tutorial as well to get you started.
 * **GitHub Pages:** TwitterAuth has a [simple GitHub page](http://mbleigh.com/twitter-auth)
 
