@@ -32,7 +32,7 @@ Finally, it will create a configuration file in `config/twitter_auth.yml` in whi
 Sign in with Twitter
 --------------------
 
-Twitter recently implemented a convenience layer on top of OAuth called [Sign in with Twitter](http://apiwiki.twitter.com/Sign-in-with-Twitter). TwitterAuth makes use of this by default by setting the `authorize_path` in `twitter_auth.yml`.
+Twitter recently implemented a convenience layer on top of OAuth called [Sign in with Twitter](http://apiwiki.twitter.com/Sign-in-with-Twitter). TwitterAuth makes use of this by default in newly generated applications by setting the `authorize_path` in `twitter_auth.yml`.
 
 If you already have an application utilizing TwitterAuth that you would like to utilize the new system, simply add this line to your `twitter_auth.yml` in each environment:
 
