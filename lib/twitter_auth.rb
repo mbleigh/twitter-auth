@@ -56,10 +56,18 @@ module TwitterAuth
   
   # The OAuth consumer used by TwitterAuth for authentication. The consumer key and secret are set in your application's +config/twitter.yml+
   def self.consumer
+    options = {:site => TwitterAuth.base_url}
+    [ :authorize_path, 
+      :request_token_path,
+      :access_token_path,
+      :scheme ].each do |oauth_option|
+      options[oauth_option] = TwitterAuth.config[oauth_option.to_s] if TwitterAuth.config[oauth_option.to_s]
+    end
+
     OAuth::Consumer.new(
       config['oauth_consumer_key'],          
       config['oauth_consumer_secret'],
-      :site => TwitterAuth.base_url
+      options 
     )
   end
 
@@ -69,6 +77,10 @@ module TwitterAuth
     net.use_ssl = uri.scheme == 'https'
     net.read_timeout = TwitterAuth.api_timeout
     net
+  end
+
+  def self.authorize_path
+    config['authorize_path'] || '/oauth/authorize'
   end
 end
 
