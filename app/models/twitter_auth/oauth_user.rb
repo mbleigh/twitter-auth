@@ -16,7 +16,8 @@ module TwitterAuth
         response = token.get(TwitterAuth.path_prefix + '/account/verify_credentials.json')
         user_info = handle_response(response)
         
-        if user = User.find_by_login(user_info['screen_name'])
+        if user = User.find_by_twitter_id(user_info['id'].to_s)
+          user.login = user_info['screen_name']
           user.assign_twitter_attributes(user_info)
           user.access_token = token.token
           user.access_secret = token.secret

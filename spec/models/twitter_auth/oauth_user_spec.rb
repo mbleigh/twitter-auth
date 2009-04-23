@@ -14,6 +14,12 @@ describe TwitterAuth::OauthUser do
       lambda{ User.identify_or_create_from_access_token(@token) }.should_not raise_error(ArgumentError)
     end
 
+    it 'should change the login when the screen_name changes' do
+      @user = Factory(:twitter_oauth_user, :twitter_id => '123')
+      User.stub!(:handle_response).and_return({'id' => 123, 'screen_name' => 'dude'})
+      User.identify_or_create_from_access_token(@token).should == @user.reload
+    end
+
     it 'should accept two strings' do
       lambda{ User.identify_or_create_from_access_token('faketoken', 'fakesecret') }.should_not raise_error(ArgumentError)
     end
@@ -27,19 +33,19 @@ describe TwitterAuth::OauthUser do
       User.identify_or_create_from_access_token(@token)
     end
 
-    it 'should try to find the user with that login' do
-      User.should_receive(:find_by_login).once.with('twitterman')
+    it 'should try to find the user with that id' do
+      User.should_receive(:find_by_twitter_id).once.with('123')
       User.identify_or_create_from_access_token(@token)
     end
 
     it 'should return the user if he/she exists' do
-      user = Factory.create(:twitter_oauth_user, :login => 'twitterman')
+      user = Factory.create(:twitter_oauth_user, :twitter_id => '123', :login => 'twitterman')
       user.reload
       User.identify_or_create_from_access_token(@token).should == user
     end
 
     it 'should update the access_token and access_secret for the user if he/she exists' do
-      user = Factory.create(:twitter_oauth_user, :login => 'twitterman', :access_token => 'someothertoken', :access_secret => 'someothersecret')
+      user = Factory.create(:twitter_oauth_user, :twitter_id => '123', :login => 'twitterman', :access_token => 'someothertoken', :access_secret => 'someothersecret')
       User.identify_or_create_from_access_token(@token)
       user.reload
       user.access_token.should == @token.token

@@ -35,7 +35,8 @@ module TwitterAuth
       end
 
       def identify_or_create_from_twitter_hash_and_password(twitter_hash, password)
-        if user = User.find_by_login(twitter_hash['screen_name']) 
+        if user = User.find_by_twitter_id(twitter_hash['id'].to_s)
+          user.login = twitter_hash['screen_name']
           user.assign_twitter_attributes(twitter_hash)
           user.password = password
           user.save

@@ -1,6 +1,6 @@
 module TwitterAuth
   class GenericUser < ActiveRecord::Base
-    attr_protected :login, :remember_token, :remember_token_expires_at
+    attr_protected :twitter_id, :remember_token, :remember_token_expires_at
     
     TWITTER_ATTRIBUTES = [
       :name,
@@ -24,10 +24,11 @@ module TwitterAuth
       :utc_offset
     ]
     
-    validates_presence_of :login
+    validates_presence_of :login, :twitter_id
     validates_format_of :login, :with => /\A[a-z0-9_]+\z/i
     validates_length_of :login, :in => 1..15
     validates_uniqueness_of :login, :case_sensitive => false
+    validates_uniqueness_of :twitter_id, :message => "ID has already been taken."
     validates_uniqueness_of :remember_token, :allow_blank => true
     
     def self.table_name; 'users' end
@@ -35,7 +36,10 @@ module TwitterAuth
     def self.new_from_twitter_hash(hash)
       raise ArgumentError, 'Invalid hash: must include screen_name.' unless hash.key?('screen_name')
 
+      raise ArgumentError, 'Invalid hash: must include id.' unless hash.key?('id')
+
       user = User.new
+      user.twitter_id = hash['id'].to_s
       user.login = hash['screen_name']
 
       TWITTER_ATTRIBUTES.each do |att|

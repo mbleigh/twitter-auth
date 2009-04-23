@@ -81,7 +81,7 @@ describe SessionsController do
 
       describe 'with proper info' do
         before do
-          @user = Factory.create(:twitter_oauth_user)
+          @user = Factory.create(:twitter_oauth_user, :twitter_id => '123')
           @time = Time.now
           @remember_token = ActiveSupport::SecureRandom.hex(10)
           
@@ -177,7 +177,7 @@ describe SessionsController do
       
       describe '#create' do
         before do
-          @user = Factory.create(:twitter_basic_user)
+          @user = Factory.create(:twitter_basic_user, :twitter_id => '123')
         end
 
         it 'should call logout_keeping_session! to remove session info' do
