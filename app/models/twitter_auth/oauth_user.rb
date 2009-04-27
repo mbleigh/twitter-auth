@@ -13,6 +13,8 @@ module TwitterAuth
       def identify_or_create_from_access_token(token, secret=nil)
         raise ArgumentError, 'Must authenticate with an OAuth::AccessToken or the string access token and secret.' unless (token && secret) || token.is_a?(OAuth::AccessToken)
         
+        token = OAuth::AccessToken.new(TwitterAuth.consumer, token, secret) unless token.is_a?(OAuth::AccessToken)
+        
         response = token.get(TwitterAuth.path_prefix + '/account/verify_credentials.json')
         user_info = handle_response(response)
         
