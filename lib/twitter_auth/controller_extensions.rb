@@ -20,7 +20,14 @@ module TwitterAuth
     end
 
     def current_user
-      @current_user ||= User.find_by_id(session[:user_id]) || User.from_remember_token(cookies[:remember_token])
+      @current_user = 
+        if session[:user_id]
+          User.find_by_id(session[:user_id])
+        elsif cookies[:remember_token]
+          User.from_remember_token(cookies[:remember_token])
+        else
+          false
+        end
     end
 
     def current_user=(new_user)
