@@ -20,7 +20,7 @@ module TwitterAuth
     end
 
     def current_user
-      @current_user = 
+      @current_user ||= 
         if session[:user_id]
           User.find_by_id(session[:user_id])
         elsif cookies[:remember_token]
@@ -62,8 +62,8 @@ module TwitterAuth
     end
 
     def logout_keeping_session!
-      @current_user = nil
       session[:user_id] = nil
+      @current_user = nil
       cookies.delete(:remember_token)
     end
   end

@@ -151,7 +151,7 @@ describe TwitterAuthTestController do
     it 'should unset current_user' do
       controller.send(:current_user).should == @user
       get :logout_keeping_session_action
-      controller.send(:current_user).should be_nil
+      controller.send(:current_user).should be_false
     end
 
     it 'should unset the cookie' do
