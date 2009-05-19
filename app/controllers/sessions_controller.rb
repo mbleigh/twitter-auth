@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  unloadable
+
   def new
     if TwitterAuth.oauth?
       @request_token = TwitterAuth.consumer.get_request_token
