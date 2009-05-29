@@ -60,7 +60,8 @@ module TwitterAuth
     [ :authorize_path, 
       :request_token_path,
       :access_token_path,
-      :scheme ].each do |oauth_option|
+      :scheme,
+      :signature_method ].each do |oauth_option|
       options[oauth_option] = TwitterAuth.config[oauth_option.to_s] if TwitterAuth.config[oauth_option.to_s]
     end
 

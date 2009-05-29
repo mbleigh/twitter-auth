@@ -24,12 +24,14 @@ module TwitterAuth
       :utc_offset
     ]
     
-    validates_presence_of :login, :twitter_id
-    validates_format_of :login, :with => /\A[a-z0-9_]+\z/i
-    validates_length_of :login, :in => 1..15
-    validates_uniqueness_of :login, :case_sensitive => false
-    validates_uniqueness_of :twitter_id, :message => "ID has already been taken."
-    validates_uniqueness_of :remember_token, :allow_blank => true
+    with_options :if => :utilize_default_validations do |v|
+      v.validates_presence_of :login, :twitter_id
+      v.validates_format_of :login, :with => /\A[a-z0-9_]+\z/i
+      v.validates_length_of :login, :in => 1..15
+      v.validates_uniqueness_of :login, :case_sensitive => false
+      v.validates_uniqueness_of :twitter_id, :message => "ID has already been taken."
+      v.validates_uniqueness_of :remember_token, :allow_blank => true
+    end
     
     def self.table_name; 'users' end
 
@@ -68,6 +70,10 @@ module TwitterAuth
       include TwitterAuth::OauthUser
     else
       include TwitterAuth::BasicUser
+    end
+
+    def utilize_default_validations
+      true
     end
 
     def twitter
