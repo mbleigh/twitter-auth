@@ -3,7 +3,8 @@ class SessionsController < ApplicationController
 
   def new
     if TwitterAuth.oauth?
-      @request_token = TwitterAuth.consumer.get_request_token
+      oauth_callback = request.protocol + request.host_with_port + '/oauth_callback'
+      @request_token = TwitterAuth.consumer.get_request_token({:oauth_callback=>oauth_callback})
       session[:request_token] = @request_token.token
       session[:request_token_secret] = @request_token.secret
      
@@ -36,7 +37,8 @@ class SessionsController < ApplicationController
 
     @request_token = OAuth::RequestToken.new(TwitterAuth.consumer, session[:request_token], session[:request_token_secret])
 
-    @access_token = @request_token.get_access_token
+    oauth_verifier = params["oauth_verifier"]
+    @access_token = @request_token.get_access_token(:oauth_verifier => oauth_verifier)
     
     # The request token has been invalidated
     # so we nullify it in the session.
@@ -50,7 +52,7 @@ class SessionsController < ApplicationController
     cookies[:remember_token] = @user.remember_me
 
     authentication_succeeded 
-  rescue Net::HTTPServerException, Net::HTTPFatalError, TwitterAuth::Dispatcher::Error => e
+  rescue Net::HTTPServerException => e
     case e.message
       when '401 "Unauthorized"'
         authentication_failed('This authentication request is no longer valid. Please try again.') and return
