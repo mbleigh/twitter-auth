@@ -29,7 +29,7 @@ class TwitterAuthMigration < ActiveRecord::Migration
       t.string :profile_sidebar_border_color
       t.string :profile_text_color
       t.string :profile_background_image_url
-      t.boolean :profile_background_tiled
+      t.boolean :profile_background_tile
       t.integer :friends_count
       t.integer :statuses_count
       t.integer :followers_count
